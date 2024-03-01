@@ -21,13 +21,12 @@ async function bootstrap() {
     preflightContinue: false,
     // optionsSuccessStatus: 204,
   });
-  await app.listen(configService.get<string>('PORT'));
 
-  //config versioning
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: ['1'],
   });
+  await app.listen(configService.get<string>('PORT'));
 }
 bootstrap();
