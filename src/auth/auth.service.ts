@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -72,5 +72,56 @@ export class AuthService {
       expiresIn: this.configService.get<string>('JWT_REFRESH_EXPIRE'),
     });
     return refreshToken;
+  };
+
+  processNewToken = async (refresh_token: string, response: Response) => {
+    try {
+      this.jwtService.verify(refresh_token, {
+        secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+      });
+      let user = await this.usersService.findUserByToken(refresh_token);
+      if (user) {
+        const { _id, name, email, role } = user;
+        const payload = {
+          sub: 'token refresh',
+          iss: 'from server',
+          _id,
+          name,
+          email,
+          role,
+        };
+        const refresh_token = this.createRefreshToken(payload);
+
+        await this.usersService.updateUserToken(refresh_token, _id.toString());
+
+        //set refresh_token as cookies
+        response.clearCookie('refresh_token');
+
+        response.cookie('refresh_token', refresh_token, {
+          httpOnly: true,
+          maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
+          path: '',
+        });
+        return {
+          access_token: this.jwtService.sign(payload),
+          user: {
+            _id,
+            name,
+            email,
+            role,
+          },
+        };
+      } else {
+        throw new BadGatewayException('khong tim thay user');
+      }
+    } catch (error) {
+      throw new BadGatewayException('Refresh token không hợp lệ');
+    }
+  };
+
+  logout = async (response: Response, user: IUser) => {
+    await this.usersService.updateUserToken('', user._id);
+    response.clearCookie('refresh_token');
+    return 'OK';
   };
 }
