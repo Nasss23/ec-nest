@@ -17,6 +17,12 @@ export class User {
   @Prop()
   password: string;
 
+  @Prop()
+  role: string;
+
+  @Prop()
+  refreshToken: string;
+
   @Prop({ type: Object })
   createdBy: {
     _id: mongoose.Schema.Types.ObjectId;
