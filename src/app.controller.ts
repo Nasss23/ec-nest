@@ -4,7 +4,6 @@ import { LocalAuthGuard } from './auth/local-auth.guard';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { Public } from './decorator/customize';
-import { AuthGuard } from '@nestjs/passport';
 
 @Controller()
 export class AppController {

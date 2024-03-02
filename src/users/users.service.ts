@@ -50,7 +50,7 @@ export class UsersService {
     const totalItems = (await this.userModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-    const result = await this.userModel
+    const data = await this.userModel
       .find(filter)
       .skip(offset)
       .limit(defaultLimit)
@@ -65,18 +65,18 @@ export class UsersService {
         pages: totalPages, //tổng số trang với điều kiện query
         total: totalItems, // tổng số phần tử (số bản ghi)
       },
-      result, //kết quả query
+      data, //kết quả query
     };
   }
 
   async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) return 'Không tìm thấy user';
-    let user = await this.userModel
+    let data = await this.userModel
       .findById({
         _id: id,
       })
       .select('-password');
-    return user;
+    return data;
   }
 
   findOneByUsername(username: string) {
@@ -90,7 +90,7 @@ export class UsersService {
   }
 
   async update(updateUserDto: UpdateUserDto, @UserDecorator() user: IUser) {
-    let results = await this.userModel.updateOne(
+    let data = await this.userModel.updateOne(
       { _id: updateUserDto._id },
       {
         ...updateUserDto,
@@ -100,7 +100,7 @@ export class UsersService {
         },
       },
     );
-    return results;
+    return data;
   }
 
   async remove(id: string, @UserDecorator() user: IUser) {
@@ -131,7 +131,6 @@ export class UsersService {
     if (isExist) {
       throw new BadRequestException(`Email ${email} đã tồn tại`);
     }
-
     let newRegister = await this.userModel.create({
       name,
       email,

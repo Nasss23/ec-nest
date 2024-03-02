@@ -2,8 +2,11 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Req,
+  Request as Re,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -13,19 +16,18 @@ import { AuthService } from './auth.service';
 import { RegisterUserDto } from 'src/users/dto/create-user.dto';
 import { Request, Response } from 'express';
 import { IUser } from 'src/users/users.interface';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
+  @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @ResponseMessage('User login')
   @Post('login')
-  async handleLogin(
-    @Req() req: any,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  handleLogin(@Req() req: any, @Res({ passthrough: true }) response: Response) {
     return this.authService.login(req.user, response);
   }
 
@@ -62,5 +64,19 @@ export class AuthController {
     @User() user: IUser,
   ) {
     return this.authService.logout(response, user);
+  }
+
+  //  "sub": "token login",
+  // "iss": "from server",
+  // "_id": "65e31b0dda1be435c5f89252",
+  // "name": "anhnam2113",
+  // "email": "anhnamnguyen0203@gmail.com",
+  // "role": "USER",
+  // "iat": 1709397430,
+  // "exp": 1709483830
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  getProfile(@Re() req) {
+    return req.user;
   }
 }
