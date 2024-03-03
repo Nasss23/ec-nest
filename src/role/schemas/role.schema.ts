@@ -1,27 +1,16 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
-export type UserDocument = HydratedDocument<User>;
-
-@Schema({ timestamps: true })
-export class User {
-  @Prop({ required: true })
-  @Prop()
-  email: string;
-
-  @Prop({ required: true })
+export type RoleDocument = HydratedDocument<Role>;
+export class Role {
   @Prop()
   name: string;
 
-  @Prop({ required: true })
   @Prop()
-  password: string;
+  description: string;
 
   @Prop()
-  role: string;
-
-  @Prop()
-  refreshToken: string;
+  isActive: boolean;
 
   @Prop({ type: Object })
   createdBy: {
@@ -54,4 +43,4 @@ export class User {
   deleteAt: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const RoleSchema = SchemaFactory.createForClass(Role);
