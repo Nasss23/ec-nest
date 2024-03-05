@@ -1,16 +1,15 @@
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 
 export type RoleDocument = HydratedDocument<Role>;
+
+@Schema({ timestamps: true })
 export class Role {
   @Prop()
   name: string;
 
   @Prop()
   description: string;
-
-  @Prop()
-  isActive: boolean;
 
   @Prop({ type: Object })
   createdBy: {

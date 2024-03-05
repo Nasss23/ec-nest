@@ -23,7 +23,6 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
-  @HttpCode(HttpStatus.OK)
   @UseGuards(LocalAuthGuard)
   @ResponseMessage('User login')
   @Post('login')

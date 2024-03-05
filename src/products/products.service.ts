@@ -1,32 +1,35 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
-import { Category, CategoryDocument } from './schemas/category.schema';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
-import { IUser } from 'src/users/users.interface';
-import aqp from 'api-query-params';
 import mongoose, { Model } from 'mongoose';
+import { Product, ProductDocument } from './schemas/product.schema';
+import { IUser } from 'src/users/users.interface';
 import { Brand, BrandDocument } from 'src/brand/schemas/brand.schema';
+import aqp from 'api-query-params';
 
 @Injectable()
-export class CategoryService {
+export class ProductsService {
   constructor(
-    @InjectModel(Category.name)
-    private categoryModel: Model<CategoryDocument>,
+    @InjectModel(Product.name)
+    private productModel: Model<ProductDocument>,
     @InjectModel(Brand.name)
     private brandModel: Model<BrandDocument>,
   ) {}
-
-  async create(createCategoryDto: CreateCategoryDto, user: IUser) {
-    let category = await this.categoryModel.create({
-      ...createCategoryDto,
+  async create(createProductDto: CreateProductDto, user: IUser) {
+    let product = await this.productModel.create({
+      ...createProductDto,
       createdBy: {
         _id: user?._id,
         email: user?.email,
       },
     });
-    return category;
+
+    if (createProductDto.brand) {
+      const brand = await this.brandModel.findById(createProductDto.brand);
+      await brand.updateOne({ $push: { product: product?._id } });
+    }
+    return product;
   }
 
   async findAll(currentPage: number, limit: number, qs: string) {
@@ -36,10 +39,10 @@ export class CategoryService {
 
     let offset = (+currentPage - 1) * +limit;
     let defaultLimit = +limit ? +limit : 10;
-    const totalItems = (await this.categoryModel.find(filter)).length;
+    const totalItems = (await this.productModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-    const result = await this.categoryModel
+    const result = await this.productModel
       .find(filter)
       .skip(offset)
       .limit(defaultLimit)
@@ -60,16 +63,16 @@ export class CategoryService {
 
   async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestException('Không tìm thấy category');
+      throw new BadRequestException('Không tìm thấy brand');
     }
-    return await this.categoryModel.findById(id);
+    return await this.productModel.findById(id);
   }
 
-  async update(id: string, updateCategoryDto: UpdateCategoryDto, user: IUser) {
-    let data = await this.categoryModel.updateOne(
+  async update(id: string, updateProductDto: UpdateProductDto, user: IUser) {
+    let data = await this.productModel.updateOne(
       { _id: id },
       {
-        ...updateCategoryDto,
+        ...updateProductDto,
         updatedBy: {
           _id: user._id,
           email: user.email,
@@ -80,11 +83,14 @@ export class CategoryService {
   }
 
   async remove(id: string) {
-    let results = this.categoryModel.deleteOne({
+    let results = await this.productModel.deleteOne({
       _id: id,
     });
-    await this.brandModel.deleteMany({ category: id });
 
+    await this.brandModel.updateOne(
+      {},
+      { $pull: { product: id } }, // Xóa id khỏi mảng brands
+    );
     return results;
   }
 }

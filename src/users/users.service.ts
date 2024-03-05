@@ -126,7 +126,6 @@ export class UsersService {
   async register(user: RegisterUserDto) {
     const { name, email, password } = user;
     const hashPassword = this.getHashPassword(password);
-
     const isExist = await this.userModel.findOne({ email });
     if (isExist) {
       throw new BadRequestException(`Email ${email} đã tồn tại`);

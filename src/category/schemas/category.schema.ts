@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { Brand } from 'src/brand/schemas/brand.schema';
 
 export type CategoryDocument = HydratedDocument<Category>;
 
@@ -10,6 +11,9 @@ export class Category {
 
   @Prop()
   description: string;
+
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: Brand.name })
+  brand: Brand[];
 
   @Prop({ type: Object })
   createdBy: {

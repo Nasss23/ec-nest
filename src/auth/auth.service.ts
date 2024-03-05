@@ -34,7 +34,10 @@ export class AuthService {
       _id,
       name,
       email,
-      role,
+      role: {
+        _id: role._id,
+        name: role.name,
+      },
     };
     const refresh_token = this.createRefreshToken(payload);
 
@@ -53,7 +56,10 @@ export class AuthService {
         _id,
         name,
         email,
-        role,
+        role: {
+          _id: role._id,
+          name: role.name,
+        },
       },
     };
   }
@@ -89,15 +95,12 @@ export class AuthService {
           _id,
           name,
           email,
-          role,
         };
         const refresh_token = this.createRefreshToken(payload);
-
         await this.usersService.updateUserToken(refresh_token, _id.toString());
 
         //set refresh_token as cookies
         response.clearCookie('refresh_token');
-
         response.cookie('refresh_token', refresh_token, {
           httpOnly: true,
           maxAge: ms(this.configService.get<string>('JWT_REFRESH_EXPIRE')),
