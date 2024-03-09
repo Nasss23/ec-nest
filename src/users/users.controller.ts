@@ -30,7 +30,6 @@ export class UsersController {
     };
   }
 
-  @Public()
   @Get()
   @ResponseMessage('Get all user')
   findAll(

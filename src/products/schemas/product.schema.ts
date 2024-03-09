@@ -12,6 +12,33 @@ export class Product {
   @Prop()
   price: number;
 
+  @Prop()
+  image: string;
+
+  @Prop()
+  imageList: string[];
+
+  @Prop()
+  description: string;
+
+  @Prop()
+  slug: string;
+
+  @Prop()
+  quantity: number;
+
+  @Prop()
+  discount: number;
+
+  @Prop()
+  sold: number;
+
+  @Prop({ type: Date })
+  discountStartDate: Date;
+
+  @Prop({ type: Date })
+  discountEndDate: Date;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Brand' })
   brand: Brand;
 

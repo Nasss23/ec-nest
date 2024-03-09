@@ -12,6 +12,7 @@ import { CategoryModule } from './category/category.module';
 import { RoleModule } from './role/role.module';
 import { ProductsModule } from './products/products.module';
 import { BrandModule } from './brand/brand.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BrandModule } from './brand/brand.module';
     RoleModule,
     ProductsModule,
     BrandModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -51,12 +51,14 @@ export class BrandService {
     const totalItems = (await this.brandModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-    const result = await this.brandModel
+    const data = await this.brandModel
       .find(filter)
       .skip(offset)
       .limit(defaultLimit)
       .sort(sort as any)
-      .populate(population)
+      .populate({
+        path: 'category',
+      })
       .exec();
 
     return {
@@ -66,7 +68,7 @@ export class BrandService {
         pages: totalPages, //tổng số trang với điều kiện query
         total: totalItems, // tổng số phần tử (số bản ghi)
       },
-      result, //kết quả query
+      data, //kết quả query
     };
   }
 

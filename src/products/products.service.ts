@@ -42,12 +42,14 @@ export class ProductsService {
     const totalItems = (await this.productModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-    const result = await this.productModel
+    const data = await this.productModel
       .find(filter)
       .skip(offset)
       .limit(defaultLimit)
       .sort(sort as any)
-      .populate(population)
+      .populate({
+        path: 'brand',
+      })
       .exec();
 
     return {
@@ -57,7 +59,7 @@ export class ProductsService {
         pages: totalPages, //tổng số trang với điều kiện query
         total: totalItems, // tổng số phần tử (số bản ghi)
       },
-      result, //kết quả query
+      data, //kết quả query
     };
   }
 
@@ -83,7 +85,7 @@ export class ProductsService {
   }
 
   async remove(id: string) {
-    let results = await this.productModel.deleteOne({
+    let data = await this.productModel.deleteOne({
       _id: id,
     });
 
@@ -91,6 +93,6 @@ export class ProductsService {
       {},
       { $pull: { product: id } }, // Xóa id khỏi mảng brands
     );
-    return results;
+    return data;
   }
 }

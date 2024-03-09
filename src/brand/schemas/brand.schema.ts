@@ -13,6 +13,9 @@ export class Brand {
   @Prop()
   description: string;
 
+  @Prop()
+  image: string;
+
   @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Product' })
   product: Product[];
 

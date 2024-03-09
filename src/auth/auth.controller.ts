@@ -38,6 +38,7 @@ export class AuthController {
     return this.authService.register(registerUserDto);
   }
 
+  // @Public()
   @ResponseMessage('Get account')
   @Get('account')
   handleGetAccount(@User() user: IUser) {

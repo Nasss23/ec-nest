@@ -39,7 +39,7 @@ export class CategoryService {
     const totalItems = (await this.categoryModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
-    const result = await this.categoryModel
+    const data = await this.categoryModel
       .find(filter)
       .skip(offset)
       .limit(defaultLimit)
@@ -54,7 +54,7 @@ export class CategoryService {
         pages: totalPages, //tổng số trang với điều kiện query
         total: totalItems, // tổng số phần tử (số bản ghi)
       },
-      result, //kết quả query
+      data, //kết quả query
     };
   }
 

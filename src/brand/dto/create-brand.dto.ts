@@ -3,6 +3,8 @@ export class CreateBrandDto {
 
   description: string;
 
+  image: string;
+
   category: {
     _id: string;
   };
