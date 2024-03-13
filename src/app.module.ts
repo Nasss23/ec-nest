@@ -13,6 +13,7 @@ import { RoleModule } from './role/role.module';
 import { ProductsModule } from './products/products.module';
 import { BrandModule } from './brand/brand.module';
 import { FileModule } from './file/file.module';
+import { CartsModule } from './carts/carts.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { FileModule } from './file/file.module';
     ProductsModule,
     BrandModule,
     FileModule,
+    CartsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

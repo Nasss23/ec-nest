@@ -1,43 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Brand } from 'src/brand/schemas/brand.schema';
+import { Product } from 'src/products/schemas/product.schema';
 
-export type ProductDocument = HydratedDocument<Product>;
+export type CartDocument = HydratedDocument<Cart>;
 
 @Schema({ timestamps: true })
-export class Product {
-  @Prop()
-  name: string;
-
-  @Prop()
-  price: number;
-
-  @Prop()
-  image: string;
-
-  @Prop()
-  description: string;
-
-  @Prop()
-  slug: string;
-
+export class Cart {
   @Prop()
   quantity: number;
 
-  @Prop()
-  discount: number;
-
-  @Prop()
-  sold: number;
-
-  @Prop({ type: Date })
-  discountStartDate: Date;
-
-  @Prop({ type: Date })
-  discountEndDate: Date;
-
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Brand' })
-  brand: Brand;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
+  product: Product;
 
   @Prop({ type: Object })
   createdBy: {
@@ -69,5 +42,4 @@ export class Product {
   @Prop()
   deleteAt: Date;
 }
-
-export const ProductSchema = SchemaFactory.createForClass(Product);
+export const CartSchema = SchemaFactory.createForClass(Cart);

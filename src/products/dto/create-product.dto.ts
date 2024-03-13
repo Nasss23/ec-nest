@@ -7,8 +7,6 @@ export class CreateProductDto {
 
   image: string;
 
-  imageList: string[];
-
   quantity: number;
 
   discount: number;
