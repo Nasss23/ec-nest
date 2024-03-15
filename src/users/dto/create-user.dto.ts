@@ -10,6 +10,8 @@ export class CreateUserDto {
 
   @IsNotEmpty({ message: 'Password không được để trống' })
   password: string;
+
+  // cart: string[];
 }
 
 export class RegisterUserDto {

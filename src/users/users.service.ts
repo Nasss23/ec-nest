@@ -76,6 +76,7 @@ export class UsersService {
         _id: id,
       })
       .select('-password');
+
     return data;
   }
 

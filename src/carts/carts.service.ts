@@ -7,12 +7,13 @@ import mongoose, { Model } from 'mongoose';
 import { Cart, CartDocument } from './schemas/cart.schema';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
+import { User, UserDocument } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class CartsService {
   constructor(
-    @InjectModel(Product.name)
-    private productModel: Model<ProductDocument>,
+    @InjectModel(User.name)
+    private userModel: Model<UserDocument>,
     @InjectModel(Cart.name)
     private cartModel: Model<CartDocument>,
   ) {}
@@ -20,15 +21,18 @@ export class CartsService {
   async create(createCartDto: CreateCartDto, user: IUser) {
     let cart = await this.cartModel.create({
       ...createCartDto,
+      user: user,
+      quantity: 1,
       createdBy: {
         _id: user?._id,
         email: user?.email,
       },
     });
-
-    // if (createCartDto.product) {
-    //   const product = await this.productModel.findById(createCartDto.product);
-    //   await product.updateOne({ $push: { product: product?._id } });
+    // if (user) {
+    //   await this.userModel.updateOne(
+    //     { _id: user._id }, // Tìm người dùng dựa trên _id
+    //     { $push: { cart: cart._id } }, // Đẩy _id của giỏ hàng vào mảng cart
+    //   );
     // }
     return cart;
   }
@@ -39,7 +43,7 @@ export class CartsService {
     delete filter.pageSize;
 
     let offset = (+currentPage - 1) * +limit;
-    let defaultLimit = +limit ? +limit : 10;
+    let defaultLimit = +limit ? +limit : 100;
     const totalItems = (await this.cartModel.find(filter)).length;
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
@@ -89,6 +93,7 @@ export class CartsService {
     let results = await this.cartModel.deleteOne({
       _id: id,
     });
+    // let cart = await this.userModel.updateOne({}, { $pull: { cart: id } });
 
     return results;
   }
