@@ -43,6 +43,11 @@ export class BrandService {
 
   async findAll(currentPage: number, limit: number, qs: string) {
     const { filter, sort, projection, population } = aqp(qs);
+
+    if (filter.name) {
+      filter.name = { $regex: new RegExp(filter.name, 'i') };
+    }
+
     delete filter.current;
     delete filter.pageSize;
 

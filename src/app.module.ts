@@ -14,9 +14,15 @@ import { ProductsModule } from './products/products.module';
 import { BrandModule } from './brand/brand.module';
 import { FileModule } from './file/file.module';
 import { CartsModule } from './carts/carts.module';
+import { OrderModule } from './order/order.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60000,
+      limit: 10,
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -35,6 +41,7 @@ import { CartsModule } from './carts/carts.module';
     BrandModule,
     FileModule,
     CartsModule,
+    OrderModule,
   ],
   controllers: [AppController],
   providers: [AppService],

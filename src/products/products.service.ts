@@ -34,6 +34,10 @@ export class ProductsService {
 
   async findAll(currentPage: number, limit: number, qs: string) {
     const { filter, sort, projection, population } = aqp(qs);
+
+    if (filter.name) {
+      filter.name = { $regex: new RegExp(filter.name, 'i') };
+    }
     delete filter.current;
     delete filter.pageSize;
 
@@ -65,7 +69,7 @@ export class ProductsService {
 
   async findOne(id: string) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      throw new BadRequestException('Không tìm thấy brand');
+      throw new BadRequestException('Không tìm thấy product');
     }
     return await this.productModel.findById(id);
   }
