@@ -34,10 +34,7 @@ export class AuthService {
       _id,
       name,
       email,
-      role: {
-        _id: role._id,
-        name: role.name,
-      },
+      role,
     };
     const refresh_token = this.createRefreshToken(payload);
 
@@ -56,10 +53,7 @@ export class AuthService {
         _id,
         name,
         email,
-        role: {
-          _id: role._id,
-          name: role.name,
-        },
+        role,
       },
     };
   }
@@ -95,6 +89,7 @@ export class AuthService {
           _id,
           name,
           email,
+          role,
         };
         const refresh_token = this.createRefreshToken(payload);
         await this.usersService.updateUserToken(refresh_token, _id.toString());

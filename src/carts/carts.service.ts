@@ -19,22 +19,27 @@ export class CartsService {
   ) {}
 
   async create(createCartDto: CreateCartDto, user: IUser) {
-    let cart = await this.cartModel.create({
-      ...createCartDto,
+    const existingCart = await this.cartModel.findOne({
+      product: createCartDto.product,
       user: user,
-      quantity: 1,
-      createdBy: {
-        _id: user?._id,
-        email: user?.email,
-      },
     });
-    // if (user) {
-    //   await this.userModel.updateOne(
-    //     { _id: user._id }, // Tìm người dùng dựa trên _id
-    //     { $push: { cart: cart._id } }, // Đẩy _id của giỏ hàng vào mảng cart
-    //   );
-    // }
-    return cart;
+
+    if (existingCart) {
+      existingCart.quantity += 1;
+      await existingCart.save();
+      return existingCart;
+    } else {
+      let cart = await this.cartModel.create({
+        ...createCartDto,
+        user: user,
+        quantity: 1,
+        createdBy: {
+          _id: user?._id,
+          email: user?.email,
+        },
+      });
+      return cart;
+    }
   }
 
   async findAll(currentPage: number, limit: number, qs: string) {
