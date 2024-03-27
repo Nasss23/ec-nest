@@ -16,6 +16,7 @@ import { FileModule } from './file/file.module';
 import { CartsModule } from './carts/carts.module';
 import { OrderModule } from './order/order.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     FileModule,
     CartsModule,
     OrderModule,
+    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

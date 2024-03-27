@@ -32,6 +32,7 @@ async function bootstrap() {
     defaultVersion: ['1'],
   });
   app.use(helmet());
+
   await app.listen(configService.get<string>('PORT'));
 }
 bootstrap();
