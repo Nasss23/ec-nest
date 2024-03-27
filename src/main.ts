@@ -7,12 +7,14 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 import * as cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
   const reflector = app.get(Reflector);
 
+  app.useStaticAssets(join(__dirname, '..', 'public'));
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalGuards(new JwtAuthGuard(reflector));
   app.useGlobalInterceptors(new TransformInterceptor(reflector));

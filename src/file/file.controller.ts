@@ -20,7 +20,6 @@ import { Public } from 'src/decorator/customize';
 @Controller('file')
 export class FileController {
   constructor(private readonly fileService: FileService) {}
-
   @Post('upload')
   @Public()
   @UseInterceptors(FileInterceptor('file'))
