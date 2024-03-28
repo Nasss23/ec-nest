@@ -102,10 +102,7 @@ export class BrandService {
     let results = await this.brandModel.deleteOne({
       _id: id,
     });
-    await this.categoryModel.updateOne(
-      {},
-      { $pull: { brand: id } }, // Xóa id khỏi mảng brands
-    );
+    await this.categoryModel.updateMany({}, { $pull: { brand: id } });
     await this.productModel.deleteMany({ brand: id });
     return results;
   }
