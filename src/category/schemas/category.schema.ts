@@ -12,7 +12,7 @@ export class Category {
   @Prop()
   description: string;
 
-  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: Brand.name })
+  @Prop({ type: [mongoose.Schema.Types.ObjectId], ref: 'Brand' })
   brand: Brand[];
 
   @Prop({ type: Object })

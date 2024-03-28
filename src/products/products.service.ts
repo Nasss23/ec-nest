@@ -92,11 +92,7 @@ export class ProductsService {
     let data = await this.productModel.deleteOne({
       _id: id,
     });
-
-    await this.brandModel.updateOne(
-      {},
-      { $pull: { product: id } }, // Xóa id khỏi mảng brands
-    );
+    await this.brandModel.updateMany({}, { $pull: { product: id } });
     return data;
   }
 }
